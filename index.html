@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>端午节快乐 ❤️</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: linear-gradient(180deg, #fefcf0 0%, #fdf6e3 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* ====================================================
+     信封封面 — 精装版
+     ==================================================== */
+  .envelope-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #fdf0f5 0%, #f8e0ec 40%, #fce8f0 100%);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .envelope-screen.fade-out {
+    opacity: 0;
+    transform: scale(1.08);
+    pointer-events: none;
+  }
+
+  /* 信封主标题 — 显眼的大字 */
+  .env-main-title {
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  .env-main-title .name-line {
+    font-size: 26px;
+    font-weight: 800;
+    color: #c24d68;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 8px rgba(194,77,104,0.15);
+  }
+  .env-main-title .sub-line {
+    font-size: 16px;
+    color: #d495a0;
+    letter-spacing: 6px;
+    margin-top: 4px;
+  }
+  .env-main-title .heart-divider {
+    display: block;
+    margin-top: 8px;
+    font-size: 18px;
+    opacity: 0.5;
+    letter-spacing: 6px;
+  }
+
+  /* 信封外包装 */
+  .envelope-wrapper {
+    position: relative;
+    perspective: 1200px;
+  }
+
+  /* — 信封主体（玫瑰粉金色） — */
+  .envelope {
+    position: relative;
+    width: 300px;
+    height: 220px;
+    background: linear-gradient(180deg, #e8829a 0%, #d4607a 100%);
+    border-radius: 10px;
+    box-shadow:
+      0 20px 60px rgba(212,96,122,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+    animation: envFloat 3s ease-in-out infinite;
+    transform-style: preserve-3d;
+  }
+  @keyframes envFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* 金色边框装饰线 */
+  .envelope::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 2px solid rgba(255,215,200,0.4);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* — 信封下半身 — */
+  .env-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(180deg, #d4607a, #c24d68);
+    border-radius: 0 0 10px 10px;
+    z-index: 1;
+  }
+  .env-body::before {
+    content: "";
+    position: absolute;
+    top: -22px;
+    left: 0;
+    right: 0;
+    height: 44px;
+    background: #d4607a;
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+  }
+
+  /* — 信封 flap（三角盖） — */
+  .env-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(180deg, #e8829a 0%, #dc6b84 100%);
+    border-radius: 10px 10px 0 0;
+    z-index: 4;
+    transform-origin: top center;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    clip-path: polygon(0 0, 50% 65%, 100% 0, 100% 100%, 0 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .envelope.opening .env-flap {
+    transform: rotateX(180deg);
+  }
+
+  /* flap 内边装饰线 */
+  .env-flap::after {
+    content: "";
+    position: absolute;
+    bottom: 8px;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,215,200,0.4), transparent);
+  }
+
+  /* — 封印（粉色火漆） — */
+  .env-seal {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: 54px;
+    height: 54px;
+    background: radial-gradient(circle at 40% 35%, #fce4d6, #f5b7b1 50%, #e88a8a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow:
+      0 4px 15px rgba(200,120,140,0.4),
+      inset 0 2px 4px rgba(255,255,255,0.4);
+    border: 2px solid #d495a0;
+    transition: transform 0.5s ease;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .envelope.opening .env-seal {
+    transform: translate(-50%, -50%) scale(0) rotate(180deg);
+  }
+
+  /* — 露出的信笺 — */
+  .env-letter-peek {
+    position: absolute;
+    top: 28%;
+    left: 10%;
+    right: 10%;
+    height: 48%;
+    background: linear-gradient(180deg, #fffef5, #fef9e7);
+    border-radius: 4px;
+    z-index: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
+    border: 1px solid rgba(232,130,154,0.2);
+  }
+  .envelope.opening .env-letter-peek {
+    transform: translateY(-70px) scale(1.06);
+  }
+  .env-letter-peek .peek-text {
+    font-size: 11px;
+    color: #c24d68;
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    writing-mode: vertical-rl;
+    height: 85%;
+    opacity: 0.6;
+    font-weight: 500;
+  }
+
+  /* — 信封上方小标题 — */
+  .env-title {
+    position: absolute;
+    top: -42px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: #d495a0;
+    white-space: nowrap;
+    letter-spacing: 4px;
+    opacity: 0.7;
+  }
+
+  /* — 飘落的粉色花瓣装饰 — */
+  .env-petals {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .env-petals span {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #fce4d6, transparent);
+    border-radius: 50%;
+    animation: petalFall 4s ease-in-out infinite;
+  }
+  .env-petals span:nth-child(1) { left: 5%; animation-delay: 0s; }
+  .env-petals span:nth-child(2) { left: 25%; animation-delay: 0.8s; }
+  .env-petals span:nth-child(3) { left: 50%; animation-delay: 1.6s; }
+  .env-petals span:nth-child(4) { left: 70%; animation-delay: 2.4s; }
+  .env-petals span:nth-child(5) { left: 88%; animation-delay: 3.2s; }
+  @keyframes petalFall {
+    0% { opacity: 0; transform: translateY(-20px) scale(0) rotate(0deg); }
+    30% { opacity: 0.9; }
+    70% { opacity: 0.5; transform: translateY(15px) scale(1.3) rotate(30deg); }
+    100% { opacity: 0; transform: translateY(30px) scale(0.5) rotate(-20deg); }
+  }
+
+  /* — 点击提示 — */
+  .env-hint {
+    margin-top: 55px;
+    font-size: 14px;
+    color: #c24d68;
+    letter-spacing: 3px;
+    animation: hintPulse 2s ease-in-out infinite;
+    text-align: center;
+  }
+  @keyframes hintPulse {
+    0%, 100% { opacity: 0.5; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-4px); }
+  }
+  .env-hint .arrow {
+    display: block;
+    font-size: 22px;
+    margin-top: 6px;
+    opacity: 0.7;
+  }
+
+  /* — 左右缎带装饰 — */
+  .ribbon-left, .ribbon-right {
+    position: absolute;
+    top: -5px;
+    width: 30px;
+    height: 80px;
+    background: linear-gradient(180deg, #f5b7b1, #e8829a, #f5b7b1);
+    border-radius: 4px;
+    z-index: 7;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .ribbon-left {
+    left: -12px;
+    transform: rotate(-15deg);
+    border-left: 1px solid rgba(255,255,255,0.15);
+  }
+  .ribbon-right {
+    right: -12px;
+    transform: rotate(15deg);
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+
+  /* ====================================================
+     主内容
+     ==================================================== */
+  .container {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .container.show {
+    opacity: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 36px 0 8px;
+    position: relative;
+  }
+  .header .bamboo-icon {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 8px;
+    animation: sway 3s ease-in-out infinite;
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+  .header h1 {
+    font-size: 30px;
+    background: linear-gradient(135deg, #e8829a, #f5b7b1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 3px;
+  }
+  .header .sub {
+    color: #c24d68;
+    font-size: 15px;
+    margin-top: 6px;
+    opacity: 0.75;
+    letter-spacing: 5px;
+  }
+  .header .date {
+    color: #b8a080;
+    font-size: 13px;
+    margin-top: 5px;
+    letter-spacing: 2px;
+  }
+
+  /* Hero card */
+  .hero-card {
+    background: linear-gradient(145deg, #fdf0f5, #fce8f0);
+    border-radius: 18px;
+    padding: 28px 22px;
+    margin: 14px 0;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(212,96,122,0.1);
+    border: 1px solid rgba(232,130,154,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 130px;
+    height: 130px;
+    background: radial-gradient(circle, rgba(245,183,177,0.15), transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-card::after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(232,130,154,0.08), transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-card .zongzi-icon {
+    font-size: 52px;
+    display: block;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .hero-card .greeting {
+    font-size: 20px;
+    color: #c24d68;
+    font-weight: 600;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-card .message {
+    font-size: 15px;
+    color: #7f6b4d;
+    line-height: 2;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-card .message em {
+    font-style: normal;
+    color: #e8829a;
+    font-weight: 600;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 16px;
+    color: #c24d68;
+    text-align: center;
+    margin: 28px 0 14px;
+    letter-spacing: 4px;
+    position: relative;
+  }
+  .section-title::before,
+  .section-title::after {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: #e8829a;
+    vertical-align: middle;
+    margin: 0 8px;
+    opacity: 0.35;
+  }
+
+  /* Blessing cards */
+  .blessing-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.04);
+    border: 1px solid #f0e8d8;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .blessing-card:active {
+    transform: scale(0.98);
+  }
+  .blessing-card .emoji-tag {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .blessing-card .label {
+    font-size: 12px;
+    color: #c24d68;
+    background: #fdf0f5;
+    padding: 2px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .blessing-card .text {
+    font-size: 15px;
+    color: #4a3f30;
+    line-height: 2;
+    letter-spacing: 0.5px;
+  }
+  .blessing-card .text .highlight {
+    color: #e8829a;
+    font-weight: 600;
+  }
+
+  .blessing-card:nth-of-type(1) { border-left: 4px solid #e8829a; }
+  .blessing-card:nth-of-type(2) { border-left: 4px solid #f5b7b1; }
+  .blessing-card:nth-of-type(3) { border-left: 4px solid #27ae60; }
+  .blessing-card:nth-of-type(4) { border-left: 4px solid #e91e63; }
+  .blessing-card:nth-of-type(5) { border-left: 4px solid #9b59b6; }
+  .blessing-card:nth-of-type(6) { border-left: 4px solid #2ecc71; }
+  .blessing-card:nth-of-type(7) { border-left: 4px solid #f1c40f; }
+  .blessing-card:nth-of-type(8) { border-left: 4px solid #3498db; }
+
+  /* Heart rain */
+  .heart-rain-area {
+    text-align: center;
+    margin: 22px 0;
+    padding: 20px 0;
+    position: relative;
+  }
+  .heart-rain-area .hint {
+    color: #bbb;
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .heart-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    font-size: 18px;
+    background: linear-gradient(135deg, #e8829a, #f5b7b1);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    box-shadow: 0 6px 24px rgba(212,96,122,0.3);
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .heart-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 3px 10px rgba(212,96,122,0.2);
+  }
+  .heart-btn:hover {
+    box-shadow: 0 8px 28px rgba(212,96,122,0.4);
+  }
+
+  /* Floating hearts */
+  .floating-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    animation: heartFloat ease-out forwards;
+  }
+  @keyframes heartFloat {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(0.3) rotate(0deg);
+    }
+    30% {
+      opacity: 0.9;
+      transform: translateY(-60px) scale(1.1) rotate(8deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-200px) scale(0.7) rotate(-5deg);
+    }
+  }
+
+  /* Decoration */
+  .zongzi-deco {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin: 4px 0 8px;
+    font-size: 20px;
+    opacity: 0.5;
+    animation: decoFloat 4s ease-in-out infinite;
+  }
+  @keyframes decoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px dashed #e0d5c0;
+  }
+  .footer .love-msg {
+    font-size: 16px;
+    color: #c24d68;
+    letter-spacing: 2px;
+    line-height: 1.9;
+  }
+  .footer .love-msg .big {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .footer .signature {
+    margin-top: 18px;
+    font-size: 17px;
+    color: #c24d68;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+  .footer .signature::before {
+    content: "💌";
+    display: block;
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+  .footer .tagline {
+    font-size: 12px;
+    color: #c0a898;
+    margin-top: 14px;
+    letter-spacing: 2px;
+  }
+
+  /* Intersection Observer fade-in */
+  .animate-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .animate-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Background decorations */
+  .bg-leaf {
+    position: fixed;
+    font-size: 42px;
+    opacity: 0.07;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .bg-leaf:nth-child(1) { top: 4%; left: 2%; transform: rotate(-20deg); }
+  .bg-leaf:nth-child(2) { top: 28%; right: 2%; transform: rotate(35deg) scaleX(-1); }
+  .bg-leaf:nth-child(3) { bottom: 18%; left: 1%; transform: rotate(-40deg); }
+  .bg-leaf:nth-child(4) { bottom: 3%; right: 4%; transform: rotate(15deg) scaleX(-1); }
+
+  /* ====================================================
+     响应式
+     ==================================================== */
+  @media (max-width: 400px) {
+    .envelope { width: 260px; height: 190px; }
+    .env-main-title .name-line { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景装饰 -->
+<div class="bg-leaf">🎋</div>
+<div class="bg-leaf">🌿</div>
+<div class="bg-leaf">🎋</div>
+<div class="bg-leaf">🌿</div>
+
+<!-- ====================================================
+     信封封面
+     ==================================================== -->
+<div class="envelope-screen" id="envelopeScreen">
+
+  <!-- 显眼的主标题 -->
+  <div class="env-main-title">
+    <div class="name-line">💕 给 黄婉玲宝宝 的一封信 💕</div>
+    <div class="heart-divider">🌸 ✨ 🌸</div>
+  </div>
+
+  <div class="envelope-wrapper">
+    <div class="envelope" id="envelope">
+
+      <!-- 缎带 -->
+      <div class="ribbon-left"></div>
+      <div class="ribbon-right"></div>
+
+      <!-- 花瓣 -->
+      <div class="env-petals">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <!-- 三角 flap -->
+      <div class="env-flap"></div>
+
+      <!-- 火漆封印 -->
+      <div class="env-seal">❤️</div>
+
+      <!-- 信封下半 -->
+      <div class="env-body"></div>
+
+      <!-- 露出信纸 -->
+      <div class="env-letter-peek">
+        <div class="peek-text">端 午 安 康 · 心 里 全 是 你</div>
+      </div>
+    </div>
+
+    <div class="env-title">💌 一 封 信 💌</div>
+  </div>
+
+  <div class="env-hint">
+    轻触打开 💕
+    <span class="arrow">👇</span>
+  </div>
+</div>
+
+<!-- ====================================================
+     主内容
+     ==================================================== -->
+<div class="container" id="mainContent">
+
+  <div class="header animate-in" id="elHeader">
+    <span class="bamboo-icon">🎋</span>
+    <h1>端午节快乐</h1>
+    <div class="sub">💕 五月初五 · 粽情粽意 💕</div>
+    <div class="date">农历五月初五 · 2026</div>
+  </div>
+
+  <div class="hero-card animate-in" id="elHero">
+    <span class="zongzi-icon">🎋</span>
+    <div class="greeting">给 我最亲爱的你 ❤️</div>
+    <div class="message">
+      粽叶再厚，裹不住我的思念。<br>
+      五彩绳再长，缠不住我的牵挂。<br>
+      这个端午节，<em>只想和你在一起</em> 🥰
+    </div>
+  </div>
+
+  <div class="section-title animate-in" id="elTitle1">💌 给你的端午祝福</div>
+
+  <div class="blessing-card animate-in" id="elB1">
+    <span class="emoji-tag">🌸</span>
+    <span class="label">甜言蜜语</span>
+    <div class="text">
+      你是糯米我是粽叶，<span class="highlight">紧紧包住你</span>是我这辈子最幸福的事。<br>
+      你是馅儿我是线，无论多远都能把你拉回我身边 ❤️
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB2">
+    <span class="emoji-tag">🛶</span>
+    <span class="label">龙舟情话</span>
+    <div class="text">
+      别人赛龙舟争第一，<span class="highlight">我只想争你的心</span>。<br>
+      鼓声再响，也不及我见到你时的心跳声。咚咚咚——每一槌都在说爱你 ❤️
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB3">
+    <span class="emoji-tag">🌿</span>
+    <span class="label">艾草相思</span>
+    <div class="text">
+      门插艾草驱百病，而你一笑<span class="highlight">驱走我所有烦恼</span>。<br>
+      端午的艾草再香，也不及你发间淡淡的香气。好想在你身边 🥺
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB4">
+    <span class="emoji-tag">🎀</span>
+    <span class="label">五彩绳约</span>
+    <div class="text">
+      五彩绳系腕，愿你平安喜乐。<br>
+      而我想系住的<span class="highlight">不是手腕，是你的一辈子</span>。<br>
+      宝贝，端午节快乐！
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB5">
+    <span class="emoji-tag">🍙</span>
+    <span class="label">粽有千言</span>
+    <div class="text">
+      粽有千言万语，<span class="highlight">不如一句"我想你"</span>。<br>
+      咸粽甜粽都不如你——你是我的"命中注粽" 🥰<br>
+      这个端午，我的心全被你包了！
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB6">
+    <span class="emoji-tag">🌙</span>
+    <span class="label">端午思念</span>
+    <div class="text">
+      五月的风里都是粽香，<br>
+      而我心里<span class="highlight">满满都是你</span>。<br>
+      虽然不能面对面一起吃粽子，<br>
+      但我的心早已飞到你的身边。等我 🏃‍♂️
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB7">
+    <span class="emoji-tag">💝</span>
+    <span class="label">一生所爱</span>
+    <div class="text">
+      端午年年有，<span class="highlight">而你今年特别甜</span> 😘<br>
+      不对，是年年都甜，<br>
+      因为有你在的每一天都是过节。<br>
+      宝贝，爱你一万年 ❤️❤️❤️
+    </div>
+  </div>
+
+  <div class="blessing-card animate-in" id="elB8">
+    <span class="emoji-tag">☀️</span>
+    <span class="label">心里话</span>
+    <div class="text">
+      有人说粽子有甜有咸，<br>
+      而我的世界里<span class="highlight">只有你——最甜</span> 😊<br>
+      愿岁岁年年，身边都有你。<br>
+      端午安康，我的宝贝！
+    </div>
+  </div>
+
+  <div class="heart-rain-area animate-in" id="elHeartArea">
+    <div class="hint">💕 戳一戳，爱心满屏 💕</div>
+    <button class="heart-btn" id="heartBtn">❤️ 送 你 爱 心 ❤️</button>
+  </div>
+
+  <div class="footer animate-in" id="elFooter">
+    <div class="love-msg">
+      <span class="big">💕 端午节快乐 💕</span>
+      和你在一起的每一天<br>都像粽子一样 <span style="color:#e8829a;font-weight:600;">甜到心里</span> ❤️
+    </div>
+    <div class="signature">
+      —— 爱你的李先生
+    </div>
+    <div class="tagline">—— 送给最爱的黄婉玲宝宝 · 2026 端午 ——</div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var envelopeScreen = document.getElementById('envelopeScreen');
+  var envelope       = document.getElementById('envelope');
+  var mainContent    = document.getElementById('mainContent');
+  var body           = document.body;
+
+  /* ===== 点击信封 → 打开 → 直接进入主内容 ===== */
+  envelopeScreen.addEventListener('click', function(e) {
+    if (envelope.classList.contains('opening')) return;
+    envelope.classList.add('opening');
+
+    setTimeout(function() {
+      envelopeScreen.classList.add('fade-out');
+
+      setTimeout(function() {
+        envelopeScreen.style.display = 'none';
+        mainContent.classList.add('show');
+        body.classList.add('scrollable');
+
+        startScrollAnimations();
+
+        var headerEl = document.getElementById('elHeader');
+        var heroEl   = document.getElementById('elHero');
+        if (headerEl) headerEl.classList.add('visible');
+        if (heroEl)   heroEl.classList.add('visible');
+      }, 500);
+    }, 800);
+  });
+
+  /* ===== 滚动渐入动画 ===== */
+  function startScrollAnimations() {
+    var targets = document.querySelectorAll('.animate-in');
+    if (!targets.length) return;
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -20px 0px'
+    });
+
+    targets.forEach(function(el) {
+      if (!el.classList.contains('visible')) {
+        observer.observe(el);
+      }
+    });
+  }
+
+  /* ===== 爱心雨 ===== */
+  var heartEmojis = ['❤️','💕','💗','💖','💝','🥰','😘','💓','💋'];
+
+  function createHearts(count) {
+    for (var i = 0; i < count; i++) {
+      (function(idx) {
+        setTimeout(function() {
+          var heart = document.createElement('div');
+          heart.className = 'floating-heart';
+          heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+          heart.style.left = (8 + Math.random() * 84) + 'vw';
+          heart.style.top  = (15 + Math.random() * 50) + 'vh';
+          heart.style.fontSize        = (16 + Math.random() * 26) + 'px';
+          heart.style.animationDuration = (2 + Math.random() * 1.8) + 's';
+          document.body.appendChild(heart);
+          setTimeout(function() { heart.remove(); }, 4000);
+        }, idx * 70);
+      })(i);
+    }
+  }
+
+  var heartBtn = document.getElementById('heartBtn');
+  if (heartBtn) {
+    heartBtn.addEventListener('click', function() {
+      createHearts(20);
+    });
+  }
+
+  var cards = document.querySelectorAll('.blessing-card');
+  cards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      createHearts(6);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
